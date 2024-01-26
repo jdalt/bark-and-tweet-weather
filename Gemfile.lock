@@ -77,7 +77,6 @@ GEM
       tzinfo (~> 2.0)
     base64 (0.2.0)
     bigdecimal (3.1.6)
-    bindex (0.8.1)
     bootsnap (1.17.1)
       msgpack (~> 1.2)
     builder (3.2.4)
@@ -103,9 +102,6 @@ GEM
     irb (1.11.1)
       rdoc
       reline (>= 0.4.2)
-    jbuilder (2.11.5)
-      actionview (>= 5.0.0)
-      activesupport (>= 5.0.0)
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -187,6 +183,10 @@ GEM
     rake (13.1.0)
     rdoc (6.6.2)
       psych (>= 4.0.0)
+    redis (5.0.8)
+      redis-client (>= 0.17.0)
+    redis-client (0.19.1)
+      connection_pool
     reline (0.4.2)
       io-console (~> 0.5)
     ruby2_keywords (0.0.5)
@@ -208,11 +208,6 @@ GEM
       railties (>= 6.0.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    web-console (4.2.1)
-      actionview (>= 6.0.0)
-      activemodel (>= 6.0.0)
-      bindex (>= 0.4.0)
-      railties (>= 6.0.0)
     webrick (1.8.1)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
@@ -231,15 +226,13 @@ DEPENDENCIES
   bootsnap
   debug
   importmap-rails
-  jbuilder
   pg (~> 1.1)
   puma (>= 5.0)
   rails (~> 7.1.2)
+  redis (>= 4.0.1)
   sprockets-rails
   stimulus-rails
   turbo-rails
-  tzinfo-data
-  web-console
 
 RUBY VERSION
    ruby 3.3.0p0
