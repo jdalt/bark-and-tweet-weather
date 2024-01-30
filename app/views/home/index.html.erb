@@ -23,6 +23,11 @@
         </div>
       <% end %>
       </div>
+      <% if @cache_hit %>
+        <%= image_tag('cache-hit.png', class: 'cache') %>
+      <% else %>
+        <%= image_tag('cache-miss.png', class: 'cache') %>
+      <% end %>
     </div>
   <% end %>
 </div>

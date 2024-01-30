@@ -70,6 +70,12 @@ body {
   height: 100%;
 }
 
+.container img.cache {
+  display: block;
+  margin: 0 auto;
+  height: 25%;
+}
+
 .container .grid-row h2 {
   text-align: center;
 }

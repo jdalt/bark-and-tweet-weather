@@ -30,12 +30,16 @@ class HomeController < ApplicationController
 
     if @location
       # NOTE: We're rounding down to 4 decimal places to both match the resolution
-      # of the OpenWeather API and significantly increase the cache hit rate.
-      @lat, @lon = @location.coordinates.map{|n| n.round(4)}
-      @weather_request = Weather::OpenWeatherMapRequest.retrieve(lat: @lat, lon: @lon)
+      # of the OpenWeather API.
+      lat, lon = @location.coordinates.map{|n| n.round(4)}
+      @cache_hit = true
+      @weather_request = Rails.cache.fetch(@location.postal_code, expires_in: 30.minutes) do
+        @cache_hit = false
+        Weather::OpenWeatherMapRequest.retrieve(lat: lat, lon: lon)
+      end
     end
 
-    # We're passing @location and @weather_request into the view.
+    # We're passing @location, @weather_request, @cache_hit, and @cache_hit into the view.
     render 'home/index'
   end
 
