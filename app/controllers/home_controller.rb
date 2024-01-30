@@ -5,6 +5,10 @@ class HomeController < ApplicationController
       @location = Geocoder.search(params[:address]).first
     end
 
+    if params[:address] && !@location
+      flash.now[:error] = "Could not find address: \"#{params[:address]}\""
+    end
+
     if @location
       # NOTE: We're rounding down to 4 decimal places to both match the resolution
       # of the OpenWeather API and significantly increase the cache hit rate.

@@ -120,5 +120,26 @@ RSpec.describe HomeController, type: :request do
         assert_requested owm_req
       end
     end
+
+    context 'an address that cannot be reverse geocoded' do
+      it 'returns response with logo and address form but no forecast' do
+        # Payload is empty array when address cannot be reverse geocoded.
+        nominatim_hash = []
+
+        # Mock the reverse Geocoding request.
+        # NOTE: Matching the url on a regex to avoid all the query param noise.
+        nominatim_req = stub_request(:get, /https:\/\/nominatim.openstreetmap.org/).
+          to_return(status: 200, body: nominatim_hash.to_json, headers: {})
+
+        get root_path, params: { address: "1234 Derp St\nMinneapolis, MN\n55555" }
+        expect(response).to have_http_status(:success) # 200 code, but no data found
+        expect(response.body).to include('id="logo"')
+        expect(response.body).to include('id="address-form"')
+        expect(response.body).to_not include('id="current-and-forecast"')
+        expect(response.body).to include('Could not find address')
+        assert_requested nominatim_req
+        assert_not_requested :get, 'https://api.openweathermap.org'
+      end
+    end
   end
 end
