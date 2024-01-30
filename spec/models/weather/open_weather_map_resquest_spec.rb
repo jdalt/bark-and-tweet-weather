@@ -7,11 +7,12 @@ module Weather
     end
 
     it 'executes request and hyrdates objects' do
-      # The following result hash is an attenuated payload relative to a "normal"
-      # OpenWeatherMap onecall response. Included here are the relevant parts of the
-      # JSON for hydrating Weather::Current and Weather::ForecastDay objects.
+      # The following result hash is an attenuated response payload relative to a
+      # "normal" OpenWeatherMap onecall response. Included here are the relevant
+      # parts of the JSON for hydrating Weather::Current and Weather::ForecastDay
+      # objects.
       #
-      # For full example see:
+      # For full response example see:
       # https://openweathermap.org/api/one-call-3#example
       result_hash = {
         lat: 45,

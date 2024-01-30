@@ -1,0 +1,28 @@
+<div class="container">
+  <div id="logo"class="grid-row">
+    <%= image_tag('bark-and-tweet-transparent.png', class: 'logo') %>
+  </div>
+
+  <div id="address-form" class="grid-row">
+    <%= form_with url: root_path, method: :get do |f| %>
+      <%= f.text_area :address, value: address_text(@location) %>
+      <%= f.submit 'Forecast' %>
+    <% end %>
+  </div>
+
+  <% if @weather_request %>
+    <div id="current-and-forecast"class="grid-row">
+      <h2><%= @weather_request.current.datetime.strftime("%A %b %d, %Y") %></h2>
+      <p class="now">now <strong><%= @weather_request.current.temp.round %>°F</strong></p>
+      <div id="weather-forecast">
+      <% @weather_request.forecast_days.first(7).each do |forecast_day| %>
+        <div class="day-forecast">
+          <h3 class="day"><%= forecast_day.datetime.strftime("%a") %></h3>
+          <img class="weather-icon" src="https://openweathermap.org/img/wn/<%= forecast_day.icon %>@2x.png" />
+          <p><%= forecast_day.low_temp.round %> - <%= forecast_day.high_temp.round %> °F </p>
+        </div>
+      <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
