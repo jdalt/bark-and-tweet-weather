@@ -20,8 +20,8 @@ gem 'turbo-rails'
 
 group :development, :test do
   gem 'debug', platforms: %i[mri windows]
-  gem 'pry-rails'
   gem 'pry-doc'
+  gem 'pry-rails'
 end
 
 group :test do
