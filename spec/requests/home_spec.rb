@@ -14,12 +14,12 @@ RSpec.describe HomeController, type: :request do
     end
 
     context 'a valid address' do
-      it 'returns response with logo and address form but no forecast' do
-        # This is an attenuated payload relative to the full nominatim reverse
-        # geocoding response.
+      it 'returns response with forecast' do
+        # This is an attenuated payload relative to the full nominatim geocoding
+        # response.
         #
         # For more details on OpenStreetMap's Nominatim API see:
-        # https://nominatim.org/release-docs/latest/api/Reverse/
+        # https://nominatim.org/release-docs/latest/api/Search/
         nominatim_hash = [
           {
             place_id: 4230080,
@@ -43,7 +43,7 @@ RSpec.describe HomeController, type: :request do
           }
         ]
 
-        # Mock the reverse Geocoding request.
+        # Mock the Geocoding request.
         # NOTE: Matching the url on a regex to avoid all the query param noise.
         nominatim_req = stub_request(:get, /https:\/\/nominatim.openstreetmap.org/).
           to_return(status: 200, body: nominatim_hash.to_json, headers: {})
@@ -121,12 +121,12 @@ RSpec.describe HomeController, type: :request do
       end
     end
 
-    context 'an address that cannot be reverse geocoded' do
-      it 'returns response with logo and address form but no forecast' do
-        # Payload is empty array when address cannot be reverse geocoded.
+    context 'an address that cannot be geocoded' do
+      it 'returns flash with error' do
+        # Payload is empty array when address cannot be geocoded.
         nominatim_hash = []
 
-        # Mock the reverse Geocoding request.
+        # Mock the Geocoding request.
         # NOTE: Matching the url on a regex to avoid all the query param noise.
         nominatim_req = stub_request(:get, /https:\/\/nominatim.openstreetmap.org/).
           to_return(status: 200, body: nominatim_hash.to_json, headers: {})
@@ -139,6 +139,64 @@ RSpec.describe HomeController, type: :request do
         expect(response.body).to include('Could not find address')
         assert_requested nominatim_req
         assert_not_requested :get, 'https://api.openweathermap.org'
+      end
+    end
+
+    context '503 error in the Geocoder' do
+      it 'returns response with logo and address form but no forecast' do
+        # Mock Server Error when Geocoding request.
+        nominatim_req = stub_request(:get, /https:\/\/nominatim.openstreetmap.org/).
+          to_return(status: 503, body: '{}', headers: {})
+
+        get root_path, params: { address: "1234 Derp St\nMinneapolis, MN\n55555" }
+        expect(response).to have_http_status(:success) # 200 code, but no data found
+        expect(response.body).to include('id="logo"')
+        expect(response.body).to include('id="address-form"')
+        expect(response.body).to_not include('id="current-and-forecast"')
+        expect(response.body).to include('Address lookup service unavailable.')
+        assert_requested nominatim_req
+        assert_not_requested :get, 'https://api.openweathermap.org'
+      end
+    end
+
+    context '5xx error in the OpenWeatherMap API' do
+      it 'returns error in the flash and no forecast' do
+        # NOTE: Attenuated payload.
+        nominatim_hash = [
+          {
+            place_id: 4230080,
+            lat: '38.897699700000004',
+            lon: '-77.03655315',
+            address: {
+              house_number: '1600',
+              road: 'Pennsylvania Avenue Northwest',
+              city: 'Washington',
+              state: 'District of Columbia',
+              postcode: '20500',
+            },
+          }
+        ]
+
+        nominatim_req = stub_request(:get, /https:\/\/nominatim.openstreetmap.org/).
+          to_return(status: 200, body: nominatim_hash.to_json, headers: {})
+
+        owm_error_hash = {
+          cod: 503,
+          message: 'Gone fishing...',
+          parameters: []
+        }
+
+        owm_req = stub_request(:get, /https:\/\/api.openweathermap.org\/data\/3.0\/onecall/).
+          to_return(status: owm_error_hash[:cod], body: owm_error_hash.to_json, headers: {})
+
+        get root_path, params: { address: "1234 Derp St\nMinneapolis, MN\n55555" }
+        expect(response).to have_http_status(:success) # 200 code, but no data found
+        expect(response.body).to include('id="logo"')
+        expect(response.body).to include('id="address-form"')
+        expect(response.body).to_not include('id="current-and-forecast"')
+        expect(response.body).to include('Weather service unavailable.')
+        assert_requested nominatim_req
+        assert_requested owm_req
       end
     end
   end

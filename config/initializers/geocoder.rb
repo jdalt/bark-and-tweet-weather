@@ -13,7 +13,7 @@ Geocoder.configure(
   # Exceptions that should not be rescued by default
   # (if you want to implement custom error handling);
   # supports SocketError and Timeout::Error
-  always_raise: [],
+  always_raise: :all, # See all exceptions at https://github.com/alexreisner/geocoder/blob/master/README.md#error-handling
 
   # Calculation options
   units: :mi,                  # :km for kilometers or :mi for miles
