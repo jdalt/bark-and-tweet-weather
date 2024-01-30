@@ -19,8 +19,13 @@ gem 'turbo-rails'
 
 group :development, :test do
   gem 'debug', platforms: %i[mri windows]
+  gem 'pry-rails'
+  gem 'pry-doc'
 end
 
 group :test do
+  gem 'factory_bot_rails'
+  gem 'rails-controller-testing'
   gem 'rspec-rails'
+  gem 'webmock'
 end
