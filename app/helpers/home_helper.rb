@@ -1,5 +1,7 @@
-module HomeHelper
+# frozen_string_literal: true
 
+# Extra methods for HomeController Views
+module HomeHelper
   def address_text(location)
     if location
       address = location.data['address']
@@ -8,5 +10,4 @@ module HomeHelper
       ''
     end
   end
-
 end

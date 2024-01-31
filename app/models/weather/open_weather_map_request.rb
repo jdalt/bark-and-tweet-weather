@@ -1,21 +1,19 @@
 # frozen_string_literal: true
 
 module Weather
+  # Class to encapsulate request to the OpenWeatherMap API and hold the resulting
+  # data in memory.
   class OpenWeatherMapRequest
-    attr_reader :lat
-    attr_reader :lon
-    attr_reader :result
-    attr_reader :current
-    attr_reader :forecast_days
+    attr_reader :lat, :lon, :result, :current, :forecast_days
 
     # Query params for the OpenWeatherMap API Requests
     def self.request_params(lat:, lon:)
       {
-        lat: lat,
-        lon: lon,
+        lat:,
+        lon:,
         appid: OPEN_WEATHER_MAP_TOKEN,
         units: 'imperial',
-        exclude: 'minutely,hourly,alerts',
+        exclude: 'minutely,hourly,alerts'
       }
     end
 
@@ -33,10 +31,10 @@ module Weather
     # https://openweathermap.org/api/one-call-3
     def self.retrieve(lat:, lon:)
       response = connection.get('https://api.openweathermap.org/data/3.0/onecall') do |request|
-        request.params = request_params(lat: lat, lon: lon)
+        request.params = request_params(lat:, lon:)
       end
       result = JSON.parse(response.body)
-      self.new(lat: lat, lon: lon, result: result)
+      new(lat:, lon:, result:)
     end
 
     def initialize(lat:, lon:, result:)

@@ -1,5 +1,7 @@
-class HomeController < ApplicationController
+# frozen_string_literal: true
 
+# Controller for root route. Handles Geocoding and Weather request.
+class HomeController < ApplicationController
   class AddressNotFound < StandardError; end
 
   # See Geocoder documentation for enumeration of all possible errors.
@@ -17,30 +19,27 @@ class HomeController < ApplicationController
     render_error('Weather service unavailable.')
   end
 
-  private def render_error(msg)
-    flash.now[:error] = msg
-    render 'home/index'
-  end
-
   def index
     if params[:address]
       @location = Geocoder.search(params[:address]).first
       raise AddressNotFound unless @location
-    end
 
-    if @location
-      # NOTE: We're rounding down to 4 decimal places to both match the resolution
-      # of the OpenWeather API.
-      lat, lon = @location.coordinates.map{|n| n.round(4)}
+      lat, lon = @location.coordinates
       @cache_hit = true
       @weather_request = Rails.cache.fetch(@location.postal_code, expires_in: 30.minutes) do
         @cache_hit = false
-        Weather::OpenWeatherMapRequest.retrieve(lat: lat, lon: lon)
+        Weather::OpenWeatherMapRequest.retrieve(lat:, lon:)
       end
     end
 
-    # We're passing @location, @weather_request, @cache_hit, and @cache_hit into the view.
+    # We're passing @location, @weather_request, and @cache_hit into the view.
     render 'home/index'
   end
 
+  private
+
+  def render_error(msg)
+    flash.now[:error] = msg
+    render 'home/index'
+  end
 end

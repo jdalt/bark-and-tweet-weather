@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 module Weather
-  RSpec.describe OpenWeatherMapRequest, type: :model do
+  RSpec.describe OpenWeatherMapRequest do
     let(:full_request_url) do
       'https://api.openweathermap.org/data/3.0/onecall?appid=OWM_TEST_TOKEN&exclude=minutely,hourly,alerts&lat=45.0&lon=-93.0&units=imperial'
     end
@@ -18,7 +20,7 @@ module Weather
         lat: 45,
         lon: -93,
         current: {
-          dt: 1706637713,
+          dt: 1_706_637_713,
           temp: 37.51,
           weather: [
             {
@@ -31,11 +33,11 @@ module Weather
         },
         daily: [
           {
-            dt: 1706637600,
+            dt: 1_706_637_600,
             temp: {
               day: 37.51,
               min: 32.61,
-              max: 40.28,
+              max: 40.28
             },
             weather: [
               {
@@ -47,11 +49,11 @@ module Weather
             ]
           },
           {
-            dt: 1706724000,
+            dt: 1_706_724_000,
             temp: {
               day: 40.81,
               min: 33.79,
-              max: 48.12,
+              max: 48.12
             },
             weather: [
               {
@@ -65,8 +67,8 @@ module Weather
         ]
       }
 
-      stub_request(:get, full_request_url).
-          to_return(status: 200, body: result_hash.to_json, headers: {})
+      stub_request(:get, full_request_url)
+        .to_return(status: 200, body: result_hash.to_json, headers: {})
 
       request = described_class.retrieve(lat: 45.0, lon: -93.0)
       expect(request.lat).to eq(45.0)
@@ -85,10 +87,10 @@ module Weather
         parameters: []
       }
 
-      stub_request(:get, full_request_url).
-          to_return(status: result_hash[:cod], body: result_hash.to_json, headers: {})
+      stub_request(:get, full_request_url)
+        .to_return(status: result_hash[:cod], body: result_hash.to_json, headers: {})
 
-      # NOTE - Faraday::TooManyRequestsError inherits Faraday::ClientError which is
+      # NOTE: - Faraday::TooManyRequestsError inherits Faraday::ClientError which is
       #        what we'll likely want to catch.
       expect { described_class.retrieve(lat: 45.0, lon: -93.0) }.to raise_error(Faraday::TooManyRequestsError)
     end
@@ -102,11 +104,10 @@ module Weather
         parameters: []
       }
 
-      stub_request(:get, full_request_url).
-          to_return(status: result_hash[:cod], body: result_hash.to_json, headers: {})
+      stub_request(:get, full_request_url)
+        .to_return(status: result_hash[:cod], body: result_hash.to_json, headers: {})
 
       expect { described_class.retrieve(lat: 45.0, lon: -93.0) }.to raise_error(Faraday::ServerError)
     end
-
   end
 end
