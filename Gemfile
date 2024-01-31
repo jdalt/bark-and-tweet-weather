@@ -5,6 +5,8 @@ source 'https://rubygems.org'
 ruby '3.3.0'
 
 gem 'bootsnap', require: false
+gem 'faraday'
+gem 'geocoder'
 gem 'importmap-rails'
 gem 'pg', '~> 1.1'
 gem 'puma', '>= 5.0'
@@ -19,8 +21,13 @@ gem 'turbo-rails'
 
 group :development, :test do
   gem 'debug', platforms: %i[mri windows]
+  gem 'pry-doc'
+  gem 'pry-rails'
 end
 
 group :test do
+  gem 'factory_bot_rails'
+  gem 'rails-controller-testing'
   gem 'rspec-rails'
+  gem 'webmock'
 end

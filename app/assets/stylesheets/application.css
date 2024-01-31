@@ -13,3 +13,108 @@
  *= require_tree .
  *= require_self
  */
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #79ceda;
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+}
+
+#content {
+  width: 80%;
+  max-width: 1080px;
+}
+
+#flash {
+  background-color: white;
+  border: 1px solid black;
+  font-size: 20px;
+  left: 25%;
+  padding: 10px;
+  position: absolute;
+  border-radius: 7px;
+  top: 2%;
+  width: 50%;
+}
+
+#flash.alert-error {
+  background-color: red;
+  color: white;
+  text-align: center;
+}
+
+#flash.alert-error::before, #flash.alert-error::after {
+  content: "!";
+  font-size: 35px;
+  font-weight: bold;
+}
+
+.container {
+  display: grid;
+  grid-template-rows: 25% 15% 50%;
+  height: 100vh;
+}
+
+.container .grid-row {
+  margin: 0 auto;
+  width: 60%;
+}
+
+.container img.logo {
+  display: block;
+  margin: 0 auto;
+  height: 100%;
+}
+
+.container img.cache {
+  display: block;
+  margin: 0 auto;
+  height: 25%;
+}
+
+.container .grid-row h2 {
+  text-align: center;
+}
+
+.container p.now {
+  text-align: center;
+}
+.container p.now strong {
+  font-size: 48px;
+}
+
+.container #weather-forecast .day-forecast {
+  display: inline-block;
+  width: 13%;
+}
+
+.container h3.day {
+  text-align: center;
+  font-size: 20px;
+}
+
+.container img.weather-icon {
+  width: 75px;
+}
+
+.container form textarea {
+  display: block;
+  width: 100%;
+  padding: 7px;
+  height: 50px;
+  border: 1px solid black;
+  border-radius: 7px;
+  box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.1);
+}
+
+.container form input {
+  display: block;
+  width: 100%;
+  margin: 8px auto;
+  font-size: 20px;
+  font-weight: bold;
+}
