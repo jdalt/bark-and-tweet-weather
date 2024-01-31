@@ -1,4 +1,5 @@
 # Bark and Tweet Weather App
+<img width="1707" alt="Screenshot 2024-01-31 at 12 02 42 AM" src="https://github.com/jdalt/bark-and-tweet-weather/assets/2358067/c2197d15-d696-4ff4-9e12-09d442acd7f0">
 
 Welcome to the Bark and Tweet Weather App! This application is built with Ruby on Rails and utilizes several important tools and services such as rspec (testing), rubocop (linting), PostgreSQL (database), and redis (caching). Below you will find all the necessary information to get started with this application.
 
